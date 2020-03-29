@@ -1,0 +1,88 @@
+---
+title: "Project_1"
+author: "Grace Rogers"
+date: "3/23/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(readxl)
+library(knitr)
+library(dplyr)
+library(stats)
+library(skimr)
+library(car)
+```
+
+```{r}
+Housing <- read_excel("Housing.xlsx")
+skim(Housing)
+```
+There do not seem to be any values missing. There are lots of different units in each predictor. For instance, size is in thousands of square feet as the lot size in measured in as a rank or comparison to other lots.
+```{r}
+attach(Housing)
+pairs(~price+size+lot+bath+bedrooms)
+pairs(~price+yearbuilt+agestandardized+garagesize)
+pairs(~price +as.factor(status)+as.factor(elem))
+plot(lot, price)
+```
+
+
+```{r}
+Housing$elemfactor <- as.numeric(as.factor(elem))
+Housing$statusfactor <- as.numeric(as.factor(status))
+Housing %>%
+  select(price,size,lot,bath,bedrooms,yearbuilt,agestandardized,garagesize, elemfactor, statusfactor) %>%
+  cor()
+
+
+```
+```{r}
+Housing_model_top4<-lm(price ~ lot + bedrooms + garagesize + statusfactor + size + bath, data=Housing)
+summary(Housing_model_top4)
+vif(Housing_model_top4)
+plot(Housing_model_top4)
+```
+
+
+```{r}
+Housing_model1_everything<-lm(price~.-elem -status -yearbuilt ,data=Housing)
+summary(Housing_model1_everything)
+vif(Housing_model1_everything)
+plot(Housing_model1_everything)
+```
+taking out id variable die to it not being relevant to the model.  age standardized is an odd variable
+
+
+```{r}
+Housing_model2<-lm(price~.-id -yearbuilt - status -elem,data=Housing)
+summary(Housing_model2)
+vif(Housing_model2)
+```
+Taking out yearbuilt die to having largest probability of not being significant
+```{r}
+Housing_model3<-lm(price~.-id-yearbuilt-status -elem,data=Housing)
+summary(Housing_model3)
+vif(Housing_model3)
+plot(Housing_model3)
+```
+Age standardized is now working as a predictor. Removing bath die to being insignificant
+```{r}
+Housing_model4<-lm(price~.-id-yearbuilt-bath,data=Housing)
+summary(Housing_model4)
+```
+
+Removing garage size due to being insignificant predictor
+```{r}
+Housing_model5<-lm(price~.-id-yearbuilt-bath-garagesize,data=Housing)
+summary(Housing_model5)
+#vif(Housing_model5)
+plot(Housing_model5)
+```
+Status and neighborhoods some are significant values while others are not. leaving the variables in for now.
+
+
+
+
