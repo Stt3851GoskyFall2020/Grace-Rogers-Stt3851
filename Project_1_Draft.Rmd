@@ -36,8 +36,6 @@ Housing$statusfactor <- as.numeric(as.factor(status))
 Housing %>%
   select(price,size,lot,bath,bedrooms,yearbuilt,agestandardized,garagesize, elemfactor, statusfactor) %>%
   cor()
-
-
 ```
 ```{r}
 Housing_model_top4<-lm(price ~ lot + bedrooms + garagesize + statusfactor + size + bath, data=Housing)
