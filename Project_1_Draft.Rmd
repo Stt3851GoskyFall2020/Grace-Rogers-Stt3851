@@ -51,7 +51,7 @@ summary(Housing_model1_everything)
 vif(Housing_model1_everything)
 plot(Housing_model1_everything)
 ```
-taking out id variable die to it not being relevant to the model.  age standardized is an odd variable
+taking out id variable not relevant to the model.  age standardized is an odd variable
 
 
 ```{r}
@@ -81,6 +81,40 @@ plot(Housing_model5)
 ```
 Status and neighborhoods some are significant values while others are not. leaving the variables in for now.
 
+```{r}
+plot(size, price)
+
+```
+
+```{r}
+Housing_model_top6<-lm(price ~ lot + bedrooms + garagesize + status + size + bath, data=Housing)
+summary(Housing_model_top6)
+vif(Housing_model_top6)
+plot(Housing_model_top6)
+```
+```{r}
+Housing_model_top6rev<-lm(price ~ poly(lot,2)+ bedrooms + garagesize + statusfactor + size+bath, data=Housing)
+summary(Housing_model_top6rev)
+vif(Housing_model_top6rev)
+plot(Housing_model_top6rev)
+
+#R^2 : 0.6127
+Housing_model1_modelrough<-lm(price~ poly(lot,2)+ bedrooms +garagesize+elem:status,data=Housing)
+summary(Housing_model1rough)
+```
 
 
+
+
+
+```{r}
+Housing_model1_modelrough<-lm(price~ poly(lot,2)+garagesize+elem:status,data=Housing)
+summary(Housing_model1_modelrough)
+
+```
+
+```{r}
+plot(Housing_model1_modelrough)
+
+```
 
