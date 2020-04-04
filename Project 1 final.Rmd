@@ -1,0 +1,89 @@
+---
+title: "Project 1 final"
+author: "Daniel Short"
+date: "4/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(readxl)
+library(knitr)
+library(dplyr)
+library(stats)
+library(skimr)
+library(car)
+```
+
+#Data Summary
+
+```{r}
+Housing <- read_excel("Housing.xlsx")
+skim(Housing)
+```
+
+There do not seem to be any values missing. There are lots of different units in each predictor. For instance, size is in thousands of square feet as the lot size in measured in as a rank or comparison to other lots.
+```{r}
+attach(Housing)
+pairs(~price+size+lot+bath+bedrooms)
+pairs(~price+yearbuilt+agestandardized+garagesize)
+pairs(~price +as.factor(status)+as.factor(elem))
+plot(lot, price)
+```
+
+
+#Exploratory data anylsis
+```{r}
+Housing$elemfactor <- as.numeric(as.factor(elem))
+Housing$statusfactor <- as.numeric(as.factor(status))
+Housing %>%
+  select(price,size,lot,bath,bedrooms,yearbuilt,agestandardized,garagesize, elemfactor, statusfactor) %>%
+  cor()
+```
+Based on the intial results the variables Lot gragesize elem size bathrooms bedrooms and status seemed to be the most infulentail factors that affeted the price of the house. After running the model we removed the bathroom and bedrooms predictors sue to being insinificant. For the elementary distric and status predictors we found that some of them were signifcant and others were not so we left them in for now.
+#Initial modeling
+
+
+Based on the intial results the variables Lot, gragesize, elem, size, bath, bedrooms, and status seemed to be the most infulentail factors that affeted the price of the house. After running the model we removed the size, bathroom, and bedrooms predictors due to being insinificant.Once these were removed grage size became signifcant while size  For the elementary district and status predictors we found that some of them were signifcant and others were not so we left them in for now.Throught the VIF numbers for the predictors were low so there was little overlapping data
+
+```{r}
+Housing_model1_rough<-lm(price~ lot+garagesize+elem+size+bath+bedrooms+status,data=Housing)
+summary(Housing_model1_rough)
+vif(Housing_model1_rough)
+```
+
+
+
+```{r}
+Housing_model2_rough<-lm(price~ lot+garagesize+elem+status,data=Housing)
+summary(Housing_model2_rough)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

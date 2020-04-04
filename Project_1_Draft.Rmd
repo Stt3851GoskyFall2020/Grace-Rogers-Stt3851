@@ -100,7 +100,7 @@ plot(Housing_model_top6rev)
 
 #R^2 : 0.6127
 Housing_model1_modelrough<-lm(price~ poly(lot,2)+ bedrooms +garagesize+elem:status,data=Housing)
-summary(Housing_model1rough)
+summary(Housing_model1_modelrough)
 ```
 
 
