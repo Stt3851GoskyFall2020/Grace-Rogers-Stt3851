@@ -16,24 +16,29 @@ library(skimr)
 library(car)
 ```
 
-#Data Summary
+# 1 
+## Data Summary
 
-```{r}
+```{r, echo= FALSE}
 Housing <- read_excel("Housing.xlsx")
 skim(Housing)
 ```
 
-There do not seem to be any values missing. There are lots of different units in each predictor. For instance, size is in thousands of square feet as the lot size in measured in as a rank or comparison to other lots.
-```{r}
+Upon inspecting the data, there do not seem to be any values missing in any of the rows. One concern that arised with this initial inspection is that there are many different units of measurement in the predictors. For instance, the size of the house is in thousands of square feet as the lot size is measured as a rank compared to the other lot sizes in the dataset.
+
+# 2
+## Exploratory Data Analysis
+We then examined the predictors using the correlation to the price of a house. Using the pairs function produced the plots below. This initial plotting shows that the year built, the lot size, and the number of bedrooms may be strong predictors of house price. These plots were a good way to get an overview of the predictors, but some of the pair plots such as the elementary school variable and status variable were not clear in showing the relationship between them and house price.
+
+```{r, echo = FALSE}
 attach(Housing)
 pairs(~price+size+lot+bath+bedrooms)
 pairs(~price+yearbuilt+agestandardized+garagesize)
 pairs(~price +as.factor(status)+as.factor(elem))
-plot(lot, price)
 ```
 
+We then decided to view the correlation between the predictors and the house price. This gave us a better idea of what variables may be good predictors. We see that the number of bedrooms has a negative relationship with price as garage size has a positive relationship with house price. Based on the initial results the variables lot, garage size, elem, size, bath, bedrooms, and status seemed to be the most influential factors that affected the price of the house.
 
-#Exploratory data anylsis
 ```{r}
 Housing$elemfactor <- as.numeric(as.factor(elem))
 Housing$statusfactor <- as.numeric(as.factor(status))
@@ -41,26 +46,71 @@ Housing %>%
   select(price,size,lot,bath,bedrooms,yearbuilt,agestandardized,garagesize, elemfactor, statusfactor) %>%
   cor()
 ```
-Based on the intial results the variables Lot gragesize elem size bathrooms bedrooms and status seemed to be the most infulentail factors that affeted the price of the house. After running the model we removed the bathroom and bedrooms predictors sue to being insinificant. For the elementary distric and status predictors we found that some of them were signifcant and others were not so we left them in for now.
-#Initial modeling
 
+# 3
+## Initial modeling
 
-Based on the intial results the variables Lot, gragesize, elem, size, bath, bedrooms, and status seemed to be the most infulentail factors that affeted the price of the house. After running the model we removed the size, bathroom, and bedrooms predictors due to being insinificant.Once these were removed grage size became signifcant while size  For the elementary district and status predictors we found that some of them were signifcant and others were not so we left them in for now.Throught the VIF numbers for the predictors were low so there was little overlapping data
+Based on the initial results the variables Lot, garage size, elem, size, bath, bedrooms, and status seemed to be the most influential factors that affected the price of the house. After running the model we removed a few of the variables. we removed the bath and bedroom predictors due to insignificance. For the elementary school district and status predictors, we found that some of them were significant and others were not so we left them in the intial model. The VIF numbers for the predictors were low so there was little redundancy.
 
 ```{r}
-Housing_model1_rough<-lm(price~ lot+garagesize+elem+size+bath+bedrooms+status,data=Housing)
+Housing_model1_rough<-lm(price~ lot+garagesize+elem+size+bath+bedrooms+status+elem,data=Housing)
 summary(Housing_model1_rough)
 vif(Housing_model1_rough)
 ```
 
 
+```{r}
+Housing_model2_rough<-lm(price~ lot + garagesize + elem + status, data=Housing)
+summary(Housing_model2_rough)
+vif(Housing_model2_rough)
+
+```
+# 3
+## Model Modification
+
+After the initial modeling, the $R^2$ value was not as high as we wanted. Since the four predictors from the model above were our best predictors, we decided to continue to explore these predictors. One idea was that the elementary school area may have an influence on the status of the house so we created an interaction term between elem and status.
 
 ```{r}
-Housing_model2_rough<-lm(price~ lot+garagesize+elem+status,data=Housing)
-summary(Housing_model2_rough)
+Housing_model3_rough<-lm(price ~ lot+ garagesize + elem:status, data=Housing)
+summary(Housing_model3_rough)
+plot(Housing_model3_rough)
 
 ```
 
+Adding this interaction increased our $R^2$ value and was significant, so we kept it in the model. Next, we modified the lot size through the use of the poly command. In our final model we introduced a polynomial of size 2 on the the lot variable.
+
+```{r}
+Housing_model_final<-lm(price ~ poly(lot,2)+ garagesize + elem:status, data=Housing)
+summary(Housing_model_final)
+plot(Housing_model_final)
+
+```
+
+This also increased the $R^2$ value and did not effect the plots very much. Examing the residuals vs. leverage plot it was apparant that there were many high leverage and high influence points that were skewing our model. We decided the best thing to do would be to take these points out of the data set because they were causing the model to over fit outliers. These outliers were rows 74, 4, 20, 50. After this final step we got our final model.
+
+# 4
+## Conclusions
+Removing the high leverage points helped to straighten out the plots in the final model. The $R^2 = 0.5829$, which is slightly lower than the value we got with the high leverage points. This means that the final model accounts for $58.29$% of the variation in the data.
+```{r}
+Housing_nooutliers <- Housing[-c(74,4,20,50), ]
+Housing_model_final<-lm(price ~ poly(lot,2)+ garagesize + elem:status, data=Housing_nooutliers)
+summary(Housing_model_final)
+plot(Housing_model_final)
+```
+The 95% confidence intervals for each of the β coefficients in the final model are: 
+```{r. echo = FALSE}
+confint(Housing_model_final)
+```
+illustrate your model’s use with a 95% confidence interval for the mean response
+#### not sure what to put ### 
+
+The 95% prediction interval for an individual response for a hypothetical house of your choosing.
+```{r}
+new_house <- data.frame(lot = 7, garagesize = 2, elem = "parker", status = "pen")
+
+predict(Housing_model_final, new_house, interval="predict")
+
+```
 
 
 
