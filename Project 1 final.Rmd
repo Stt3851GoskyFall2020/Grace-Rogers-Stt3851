@@ -119,7 +119,7 @@ mean(predict)-1.96*sd(predict)
 
 
 The 95% prediction interval for an individual response for a hypothetical house of your choosing.
-```{r}
+```{r, warning = FALSE}
 new_house <- data.frame(lot = 7, garagesize = 2, elem = "parker", status = "pen")
 
 predict(Housing_model_final, new_house, interval="predict")

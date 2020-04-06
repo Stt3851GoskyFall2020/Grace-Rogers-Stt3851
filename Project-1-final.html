@@ -729,8 +729,6 @@ mean(predict)</code></pre>
 <pre class="r"><code>new_house &lt;- data.frame(lot = 7, garagesize = 2, elem = &quot;parker&quot;, status = &quot;pen&quot;)
 
 predict(Housing_model_final, new_house, interval=&quot;predict&quot;)</code></pre>
-<pre><code>## Warning in predict.lm(Housing_model_final, new_house, interval = &quot;predict&quot;):
-## prediction from a rank-deficient fit may be misleading</code></pre>
 <pre><code>##        fit      lwr      upr
 ## 1 315.4004 210.6374 420.1633</code></pre>
 </div>
