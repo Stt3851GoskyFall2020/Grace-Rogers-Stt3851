@@ -1,6 +1,6 @@
 ---
 title: "Project 1 final"
-author: "Daniel Short"
+author: "Grace Rogers and Daniel Short"
 date: "4/2/2020"
 output: html_document
 ---
