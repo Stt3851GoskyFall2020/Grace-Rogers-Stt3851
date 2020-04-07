@@ -536,7 +536,7 @@ summary(Housing_model2_rough)</code></pre>
 </div>
 </div>
 <div id="section-3" class="section level1">
-<h1>3</h1>
+<h1>4</h1>
 <div id="model-modification" class="section level2">
 <h2>Model Modification</h2>
 <p>After the initial modeling, the <span class="math inline">\(R^2\)</span> value was not as high as we wanted. Since the four predictors from the model above were our best predictors, we decided to continue to explore these predictors. One idea was that the elementary school area may have an influence on the status of the house so we created an interaction term between elem and status.</p>
@@ -641,7 +641,7 @@ plot(Housing_model_final)</code></pre>
 </div>
 </div>
 <div id="section-4" class="section level1">
-<h1>4</h1>
+<h1>5</h1>
 <div id="conclusions" class="section level2">
 <h2>Conclusions</h2>
 <p>Removing the high leverage points helped to straighten out the plots in the final model. The <span class="math inline">\(R^2 = 0.5829\)</span>, which is slightly lower than the value we got with the high leverage points. This means that the final model accounts for <span class="math inline">\(58.29\)</span>% of the variation in the data.</p>
@@ -725,7 +725,7 @@ mean(predict)</code></pre>
 <pre><code>## [1] 371.2406</code></pre>
 <pre class="r"><code>mean(predict)-1.96*sd(predict)</code></pre>
 <pre><code>## [1] 196.4246</code></pre>
-<p>The 95% prediction interval for an individual response for a hypothetical house of your choosing.</p>
+<p>The 95% prediction interval for an individual response for a hypothetical house of our choosing is below. This predicts the price of the hypothetical house to be between 210.6374 and 420.1633 thousand dollars.</p>
 <pre class="r"><code>new_house &lt;- data.frame(lot = 7, garagesize = 2, elem = &quot;parker&quot;, status = &quot;pen&quot;)
 
 predict(Housing_model_final, new_house, interval=&quot;predict&quot;)</code></pre>

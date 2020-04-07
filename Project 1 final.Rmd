@@ -65,7 +65,7 @@ summary(Housing_model2_rough)
 vif(Housing_model2_rough)
 
 ```
-# 3
+# 4
 ## Model Modification
 
 After the initial modeling, the $R^2$ value was not as high as we wanted. Since the four predictors from the model above were our best predictors, we decided to continue to explore these predictors. One idea was that the elementary school area may have an influence on the status of the house so we created an interaction term between elem and status.
@@ -89,7 +89,7 @@ plot(Housing_model_final)
 
 This also increased the $R^2$ value and did not effect the plots very much. Examining the residuals vs. leverage plot it was apparent that there were many high leverage and high influence points that were skewing our model. We decided the best thing to do would be to take these points out of the data set because they were causing the model to over fit outliers. These outliers were rows 74, 4, 20, 50. After this final step we got our final model.
 
-# 4
+# 5
 ## Conclusions
 Removing the high leverage points helped to straighten out the plots in the final model. The $R^2 = 0.5829$, which is slightly lower than the value we got with the high leverage points. This means that the final model accounts for $58.29$% of the variation in the data.
 ```{r}
@@ -118,7 +118,7 @@ mean(predict)-1.96*sd(predict)
 ```
 
 
-The 95% prediction interval for an individual response for a hypothetical house of your choosing.
+The 95% prediction interval for an individual response for a hypothetical house of our choosing is below. This predicts the price of the hypothetical house to be between 210.6374 and 420.1633 thousand dollars.
 ```{r, warning = FALSE}
 new_house <- data.frame(lot = 7, garagesize = 2, elem = "parker", status = "pen")
 
